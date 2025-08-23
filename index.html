@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baladna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* أنماط أساسية للوضع الداكن */
+    :root {
+      --bg-light: rgb(237, 239, 241);
+      --text-light: rgb(1, 88, 61);
+      --card-bg-light: white;
+      --card-text-light: rgb(1, 88, 61);
+      --footer-bg-light: rgb(237, 239, 241);
+      --footer-text-light: rgb(55, 65, 81);
+    }
+
+    .dark {
+      --bg-light: rgb(24, 25, 26);
+      --text-light: rgb(193, 247, 32);
+      --card-bg-light: rgb(40, 42, 45);
+      --card-text-light: rgb(255, 255, 255);
+      --footer-bg-light: rgb(40, 42, 45);
+      --footer-text-light: rgb(156, 163, 175);
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark .card-product {
+      background-color: var(--card-bg-light);
+      color: var(--card-text-light);
+    }
+
+    .dark .card-product h4 {
+      color: var(--card-text-light);
+    }
+
+    .dark .card-product p {
+      color: var(--footer-text-light);
+    }
+
+    .dark .bg-\[rgb\(1\,88\,61\)\] {
+      background-color: rgb(40, 42, 45);
+    }
+
+    .dark .bg-\[rgb\(237\,239\,241\)\] {
+      background-color: rgb(24, 25, 26);
+    }
+
+    .dark .text-\[rgb\(1\,88\,61\)\] {
+      color: rgb(193, 247, 32);
+    }
+
+    .dark .text-gray-800 {
+      color: white;
+    }
+
+    .dark .border {
+      border-color: rgb(107, 114, 128);
+    }
+
+    .dark .contact-form input,
+    .dark .contact-form textarea {
+      background-color: rgb(40, 42, 45);
+      color: white;
+      border-color: rgb(107, 114, 128);
+    }
+
+    footer a i {
+      transition: transform 0.3s;
+    }
+
+    footer a:hover i {
+      transform: scale(1.3);
+    }
+
+    .modal {
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.3s;
+    }
+
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* أنماط خاصة بتبديل الوضع */
+    .theme-switch {
+      display: inline-block;
+      height: 24px;
+      width: 48px;
+      position: relative;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      background-color: #ccc;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      background-color: white;
+      bottom: 4px;
+      content: '';
+      height: 16px;
+      left: 4px;
+      position: absolute;
+      transition: .4s;
+      width: 16px;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+  </style>
+</head>
+
+<body class="bg-[rgb(237,239,241)] font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-[rgb(1,88,61)] shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-white">Baladna</h1>
+      <nav class="flex items-center gap-4">
+        <ul class="flex gap-4">
+          <li><a href="#about"
+              class="px-5 py-2 rounded-full border border-white text-white font-medium hover:bg-[rgb(193,247,32)] hover:text-[rgb(1,88,61)] transition duration-300 ease-in-out shadow-sm hover:shadow-lg">عن
+              المنصة</a></li>
+          <li><a href="#products"
+              class="px-5 py-2 rounded-full border border-white text-white font-medium hover:bg-[rgb(193,247,32)] hover:text-[rgb(1,88,61)] transition duration-300 ease-in-out shadow-sm hover:shadow-lg">المنتجات</a>
+          </li>
+          <li><a href="#features"
+              class="px-5 py-2 rounded-full border border-white text-white font-medium hover:bg-[rgb(193,247,32)] hover:text-[rgb(1,88,61)] transition duration-300 ease-in-out shadow-sm hover:shadow-lg">المميزات</a>
+          </li>
+          <li><a href="#contact"
+              class="px-5 py-2 rounded-full border border-white text-white font-medium hover:bg-[rgb(193,247,32)] hover:text-[rgb(1,88,61)] transition duration-300 ease-in-out shadow-sm hover:shadow-lg">تواصل
+              معنا</a></li>
+        </ul>
+        <button id="cart-btn" class="text-white text-2xl relative">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-count"
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center opacity-0 transition-opacity">0</span>
+        </button>
+        <button id="theme-toggle-btn" class="text-white text-xl p-2 rounded-full hover:bg-[rgb(0,66,45)] transition">
+          <i id="theme-icon" class="fas fa-sun"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="relative h-screen flex items-center justify-center text-center text-white">
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('/مناسب.png');"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative z-10 px-4 max-w-3xl">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">اكتشف أفضل المنتجات المحلية</h1>
+      <p class="text-lg md:text-xl mb-8 drop-shadow-md">Baladna توفر لك تجربة تسوق مميزة مباشرة من المنتجين المحليين
+        بجودة عالية وأسعار رائعة.</p>
+      <a href="#products"
+        class="bg-[rgb(193,247,32)] text-[rgb(1,88,61)] px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:bg-white hover:text-[rgb(1,88,61)] transition duration-300">تصفح
+        المنتجات الآن</a>
+    </div>
+    <div class="absolute bottom-10 w-full flex justify-center animate-bounce">
+      <i class="fas fa-chevron-down text-3xl"></i>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="relative py-20 bg-[rgb(237,239,241)] text-[rgb(1,88,61)]">
+    <div class="absolute inset-0 bg-[url('https://via.placeholder.com/1500x800')] bg-center bg-cover opacity-10 -z-10">
+    </div>
+    <div class="container mx-auto px-4 text-center max-w-5xl">
+      <h3 class="text-4xl font-bold mb-6">عن المنصة</h3>
+      <p class="mb-8 text-lg">Baladna هي منصة مبتكرة لتعزيز التجارة المحلية وربط المنتجين بالمشترين بطريقة سهلة ومباشرة.
+        نسعى لدعم الاقتصاد المحلي وتشجيع المشاريع الصغيرة والحرفيين على النمو.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="flex flex-col items-center bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <i class="fas fa-leaf text-green-600 text-4xl mb-4"></i>
+          <h4 class="font-semibold text-lg mb-2">منتجات طبيعية</h4>
+          <p class="text-gray-600 text-sm">منتجات محلية 100% وطازجة يومياً.</p>
+        </div>
+        <div class="flex flex-col items-center bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <i class="fas fa-users text-green-600 text-4xl mb-4"></i>
+          <h4 class="font-semibold text-lg mb-2">دعم المجتمع</h4>
+          <p class="text-gray-600 text-sm">نساهم في دعم المشاريع الصغيرة والحرفيين المحليين.</p>
+        </div>
+        <div class="flex flex-col items-center bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <i class="fas fa-shield-alt text-green-600 text-4xl mb-4"></i>
+          <h4 class="font-semibold text-lg mb-2">آمنة وموثوقة</h4>
+          <p class="text-gray-600 text-sm">تجربة شراء إلكترونية سهلة وآمنة.</p>
+        </div>
+        <div class="flex flex-col items-center bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <i class="fas fa-truck text-green-600 text-4xl mb-4"></i>
+          <h4 class="font-semibold text-lg mb-2">توصيل سريع</h4>
+          <p class="text-gray-600 text-sm">المنتجات تصل مباشرة من المزارع إلى بابك.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="py-16 bg-[rgb(237,239,241)] text-[rgb(1,88,61)]">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-10">منتجاتنا</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        <!-- خبز بلدي -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="خبز بلدي" data-price="10">
+          <span
+            class="absolute top-2 left-2 bg-yellow-400 text-white px-2 py-1 rounded-full text-xs font-bold">جديد</span>
+          <div class="relative overflow-hidden">
+            <img src="/عيش بلدي مصري- Egyptian country bread🇪🇬.jpg" alt="خبز بلدي"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">10 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">خبز بلدي 🍞</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">خبز طازج من المخبوزات المحلية.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- عسل طبيعي -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="عسل طبيعي" data-price="30">
+          <div class="relative overflow-hidden">
+            <img src="/عس.jpg" alt="عسل طبيعي"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">30 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">عسل طبيعي 🍯</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">عسل نقي من مزارع النحل المحلية.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- مطرزات يدوية -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="مطرزات يدوية" data-price="50">
+          <span class="absolute top-2 left-2 bg-yellow-400 text-white px-2 py-1 rounded-full text-xs font-bold">الأكثر
+            مبيعاً</span>
+          <div class="relative overflow-hidden">
+            <img src="/مطرزات.jpg" alt="مطرزات يدوية"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">50 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">مطرزات يدوية 🧵</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">قطع فنية مميزة من التراث الفلسطيني.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- زيت زيتون بكر -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="زيت زيتون بكر" data-price="25">
+          <div class="relative overflow-hidden">
+            <img src="/زيت (2).jpg" alt="زيت زيتون بكر"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">25 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">زيت زيتون بكر 🫒</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">زيت زيتون بكر ممتاز من مزارع محلية.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- زعتر بلدي -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="زعتر بلدي" data-price="15">
+          <div class="relative overflow-hidden">
+            <img src="/ززعتتر.jpg" alt="زعتر بلدي"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">15 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">زعتر بلدي 🌿</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">زعتر طازج ونقي من الأراضي المحلية.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- صابون زيت زيتون طبيعي -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="صابون زيت زيتون طبيعي" data-price="15">
+          <div class="relative overflow-hidden">
+            <img src="/صابون.jpg" alt="صابون زيت زيتون طبيعي"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">15 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">صابون زيت زيتون طبيعي 🧼</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">صابون طبيعي 100% بزيت الزيتون المحلي للعناية بالبشرة.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- أجبان بلدية -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="أجبان بلدية" data-price="35">
+          <div class="relative overflow-hidden">
+            <img src="/ججج.jpg" alt="أجبان بلدية"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">35 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">أجبان بلدية 🧀</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">أجبان محلية تقليدية بطعم رائع.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+
+        <!-- تمور طازجة -->
+        <div
+          class="relative bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl group card-product"
+          data-name="تمور طازجة" data-price="20">
+          <div class="relative overflow-hidden">
+            <img src="/تمر صح.jpg" alt="تمور طازجة"
+              class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+            <div
+              class="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <h4 class="text-white text-lg font-bold">20 ₪</h4>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <h4 class="text-lg font-semibold mb-2">تمور طازجة 🌴</h4>
+            <p class="text-gray-600 mb-2 text-sm flex-grow">تمور طبيعية طازجة مباشرة من المزارع.</p>
+            <button
+              class="bg-gradient-to-r from-[rgb(1,88,61)] to-[rgb(0,66,45)] hover:from-[rgb(0,66,45)] hover:to-[rgb(0,50,35)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition add-to-cart-btn">
+              <i class="fas fa-shopping-cart"></i> أطلب الآن
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-16 bg-[rgb(237,239,241)] text-[rgb(1,88,61)]">
+    <div class="container mx-auto px-4 text-center">
+      <h3 class="text-3xl font-bold mb-10">مميزات المنصة</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">دعم الاقتصاد المحلي</h4>
+          <p>من خلال شراء منتجات محلية، تساهم في دعم المنتجين المحليين.</p>
+        </div>
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">سهولة التصفح</h4>
+          <p>واجهة مستخدم بسيطة وسهلة الاستخدام لجميع الأعمار.</p>
+        </div>
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">جودة عالية</h4>
+          <p>المنتجات المعروضة يتم اختيارها بعناية لضمان الجودة.</p>
+        </div>
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">منتجات طازجة يومياً</h4>
+          <p>نضمن وصول المنتجات طازجة من المزارع إلى بابك مباشرة.</p>
+        </div>
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">دعم صغار المنتجين</h4>
+          <p>نشجع المشاريع الصغيرة والحرفيين المحليين.</p>
+        </div>
+        <div class="bg-[rgb(1,88,61)] text-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <h4 class="text-lg font-semibold mb-2">طرق دفع آمنة</h4>
+          <p>نسهل عملية الدفع إلكترونيًا بطريقة موثوقة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 bg-[rgb(1,88,61)] text-white">
+    <div class="container mx-auto px-4 max-w-2xl">
+      <h3 class="text-3xl font-bold mb-8 text-center">تواصل معنا</h3>
+      <form class="bg-white text-gray-800 p-8 rounded-2xl shadow-xl space-y-6 contact-form">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input type="text" placeholder="الاسم الكامل" required
+            class="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(1,88,61)] transition duration-300">
+          <input type="email" placeholder="البريد الإلكتروني" required
+            class="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(1,88,61)] transition duration-300">
+        </div>
+        <textarea placeholder="رسالتك" rows="5" required
+          class="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(1,88,61)] transition duration-300"></textarea>
+        <button type="submit"
+          class="w-full bg-[rgb(1,88,61)] text-white py-3 rounded-2xl font-semibold hover:bg-[rgb(0,66,45)] transition duration-300 shadow-lg hover:shadow-xl">إرسال</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="py-16 bg-[rgb(237,239,241)] text-[rgb(1,88,61)]">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-10">آراء العملاء</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <p class="mb-4">“أفضل تجربة شراء منتجات محلية! الجودة والطعم ممتازان.”</p>
+          <h4 class="font-bold">- أحمد من نابلس</h4>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <p class="mb-4">“Baladna توفر لي المنتجات الطازجة مباشرة من المزارع، خدمة رائعة!”</p>
+          <h4 class="font-bold">- سارة من رام الله</h4>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300">
+          <p class="mb-4">“أوصي الجميع بهذه المنصة لدعم المنتجين المحليين.”</p>
+          <h4 class="font-bold">- محمد من الخليل</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[rgb(237,239,241)] py-6 text-gray-800 mt-0">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 Baladna. جميع الحقوق محفوظة.</p>
+      <div class="mt-4 flex justify-center gap-x-6 text-gray-700 text-xl">
+        <a href="#" class="hover:text-[rgb(1,88,61)] transition duration-300"><i class="fab fa-facebook fa-lg"></i></a>
+        <a href="#" class="hover:text-[rgb(1,88,61)] transition duration-300"><i class="fab fa-instagram fa-lg"></i></a>
+        <a href="#" class="hover:text-[rgb(1,88,61)] transition duration-300"><i class="fab fa-twitter fa-lg"></i></a>
+        <a href="#" class="hover:text-[rgb(1,88,61)] transition duration-300"><i class="fab fa-whatsapp fa-lg"></i></a>
+        <a href="#" class="hover:text-[rgb(1,88,61)] transition duration-300"><i class="fab fa-linkedin fa-lg"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop"
+    class="fixed bottom-5 left-5 bg-[rgb(1,88,61)] text-white p-3 rounded-full shadow-lg hidden hover:bg-[rgb(0,66,45)] transition duration-300">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-lg relative transition-transform transform scale-95 modal-content">
+      <button id="close-cart-btn"
+        class="absolute top-4 left-4 text-gray-600 dark:text-gray-400 hover:text-red-500 transition">
+        <i class="fas fa-times-circle text-2xl"></i>
+      </button>
+      <h3 class="text-2xl font-bold mb-4 text-center text-[rgb(1,88,61)] dark:text-[rgb(193,247,32)]">سلة المشتريات</h3>
+      <div id="cart-items" class="max-h-80 overflow-y-auto mb-4 border-b pb-4">
+        <p id="empty-cart-msg" class="text-center text-gray-500 dark:text-gray-400">سلتك فارغة.</p>
+      </div>
+      <div class="flex justify-between items-center text-xl font-bold mb-4 border-t pt-4">
+        <span>المجموع الكلي:</span>
+        <span id="cart-total">0 ₪</span>
+      </div>
+      <div class="payment-methods mb-6">
+        <h4 class="text-lg font-semibold mb-2">اختر طريقة الدفع:</h4>
+        <div class="flex flex-col gap-2">
+          <label class="inline-flex items-center">
+            <input type="radio" name="payment-method" value="cash" class="form-radio text-[rgb(1,88,61)]" checked>
+            <span class="mr-2">كاش عند الاستلام <i class="fas fa-money-bill-wave text-gray-500"></i></span>
+          </label>
+          <label class="inline-flex items-center">
+            <input type="radio" name="payment-method" value="visa" class="form-radio text-[rgb(1,88,61)]">
+            <span class="mr-2">بطاقة ائتمانية <i class="fab fa-cc-visa text-blue-500"></i></span>
+          </label>
+          <label class="inline-flex items-center">
+            <input type="radio" name="payment-method" value="paypal" class="form-radio text-[rgb(1,88,61)]">
+            <span class="mr-2">باي بال <i class="fab fa-paypal text-blue-700"></i></span>
+          </label>
+        </div>
+      </div>
+      <button id="checkout-btn"
+        class="w-full bg-[rgb(1,88,61)] text-white py-3 rounded-lg font-semibold hover:bg-[rgb(0,66,45)] transition">
+        إتمام الشراء
+      </button>
+    </div>
+  </div>
+
+  <!-- Quantity Modal -->
+  <div id="quantity-modal"
+    class="modal fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-sm text-center relative transition-transform transform scale-95 modal-content">
+      <h4 id="quantity-modal-product-name" class="text-lg font-semibold mb-4 text-gray-800 dark:text-white"></h4>
+      <div class="flex items-center justify-center gap-4 mb-4">
+        <button id="quantity-minus-btn"
+          class="text-xl w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition">-</button>
+        <input type="number" id="quantity-input" value="1" min="1"
+          class="w-20 text-center p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-800 dark:text-white">
+        <button id="quantity-plus-btn"
+          class="text-xl w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition">+</button>
+      </div>
+      <button id="add-to-cart-with-quantity-btn"
+        class="w-full bg-[rgb(1,88,61)] text-white py-3 rounded-lg font-semibold hover:bg-[rgb(0,66,45)] transition">
+        أضف إلى السلة
+      </button>
+      <button id="close-quantity-btn"
+        class="mt-2 w-full text-gray-600 dark:text-gray-400 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        إلغاء
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Custom Alert Modal -->
+  <div id="alert-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-sm text-center relative">
+      <h4 id="alert-message" class="text-lg font-semibold mb-4 text-gray-800 dark:text-white"></h4>
+      <button id="close-alert-btn"
+        class="bg-[rgb(1,88,61)] text-white py-2 px-4 rounded-lg hover:bg-[rgb(0,66,45)] transition">إغلاق</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
