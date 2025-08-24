@@ -211,3 +211,83 @@ themeToggleBtn.addEventListener('click', () => {
     themeIcon.classList.add('fa-sun');
   }
 });
+// Star Rating Functionality
+const starRatingContainer = document.getElementById('star-rating');
+const reviewRatingInput = document.getElementById('review-rating');
+
+if (starRatingContainer) {
+  const stars = starRatingContainer.querySelectorAll('i.fa-star');
+  
+  stars.forEach(star => {
+    star.addEventListener('click', (e) => {
+      const rating = e.target.dataset.rating;
+      reviewRatingInput.value = rating;
+      
+      stars.forEach(s => {
+        if (s.dataset.rating <= rating) {
+          s.classList.remove('text-gray-300', 'dark:text-gray-500');
+          s.classList.add('text-yellow-400');
+        } else {
+          s.classList.remove('text-yellow-400');
+          s.classList.add('text-gray-300', 'dark:text-gray-500');
+        }
+      });
+    });
+  });
+}
+// Functionality to display new review on the page
+const reviewForm = document.getElementById('review-form');
+const newTestimonialsContainer = document.getElementById('new-testimonials-container');
+
+if (reviewForm) {
+  reviewForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    const name = document.getElementById('review-name').value;
+    const reviewText = document.getElementById('review-text').value;
+    const rating = document.getElementById('review-rating').value;
+
+    // Check if the review is valid
+    if (name.trim() === '' || reviewText.trim() === '' || rating === '0') {
+      alert('الرجاء إدخال اسمك ورأيك وتقييمك الكامل.');
+      return;
+    }
+
+    // Create the new testimonial element
+    const newTestimonial = document.createElement('div');
+    newTestimonial.className = 'bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300 dark:bg-gray-800 dark:text-white';
+    
+    // Create the rating stars
+    let starsHtml = '';
+    for (let i = 0; i < 5; i++) {
+      if (i < rating) {
+        starsHtml += '<i class="fas fa-star text-yellow-400"></i>';
+      } else {
+        starsHtml += '<i class="fas fa-star text-gray-300 dark:text-gray-500"></i>';
+      }
+    }
+    
+    newTestimonial.innerHTML = `
+      <div class="flex items-center mb-2">${starsHtml}</div>
+      <p class="mb-4">“${reviewText}”</p>
+      <h4 class="font-bold">- ${name}</h4>
+    `;
+
+    // Add the new testimonial to the container at the beginning (last in first out)
+    newTestimonialsContainer.prepend(newTestimonial);
+
+    // Reset the form
+    reviewForm.reset();
+    document.getElementById('review-rating').value = '0';
+    
+    // Reset the stars to their default color
+    const stars = document.querySelectorAll('#star-rating i.fa-star');
+    stars.forEach(star => {
+      star.classList.remove('text-yellow-400');
+      star.classList.add('text-gray-300', 'dark:text-gray-500');
+    });
+
+    // Optional: show a confirmation message
+    alert('شكراً لمشاركتك رأيك!');
+  });
+}
